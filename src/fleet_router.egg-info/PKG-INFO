@@ -1,0 +1,9 @@
+Metadata-Version: 2.4
+Name: fleet-router
+Version: 0.1.0
+Summary: Route AI queries to the cheapest model that won't break.
+Requires-Python: >=3.10
+Requires-Dist: fastapi>=0.100
+Requires-Dist: uvicorn>=0.23
+Requires-Dist: httpx>=0.24
+Requires-Dist: pydantic>=2.0

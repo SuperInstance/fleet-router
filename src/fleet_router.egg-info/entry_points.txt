@@ -1,0 +1,2 @@
+[console_scripts]
+fleet-router = fleet_router.cli:main
