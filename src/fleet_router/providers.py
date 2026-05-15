@@ -280,3 +280,27 @@ def get_provider(name: str) -> Provider:
         else:
             raise ValueError(f"Unknown provider: {name}")
     return PROVIDERS[name]
+
+
+# ─── Cost Calculator ──────────────────────────────────────────────────────────
+
+def calculate_savings(queries: list) -> dict:
+    """Calculate cost savings vs GPT-4 for a list of routed queries.
+    
+    Each query: {"domain": str, "model": str, "tokens": int, "cost": float}
+    """
+    gpt4_cost_per_1k = 30.0  # $30/1K tokens (GPT-4 pricing)
+    total_tokens = sum(q.get("tokens", 100) for q in queries)
+    gpt4_cost = (total_tokens / 1000) * gpt4_cost_per_1k
+    fleet_cost = sum(q.get("cost", 0.05) * q.get("tokens", 100) / 1000 for q in queries)
+    
+    return {
+        "total_queries": len(queries),
+        "total_tokens": total_tokens,
+        "gpt4_cost": round(gpt4_cost, 4),
+        "fleet_cost": round(fleet_cost, 4),
+        "savings": round(gpt4_cost - fleet_cost, 4),
+        "savings_pct": round((1 - fleet_cost / gpt4_cost) * 100, 1) if gpt4_cost > 0 else 0,
+        "per_query_gpt4": round(gpt4_cost / len(queries), 4) if queries else 0,
+        "per_query_fleet": round(fleet_cost / len(queries), 4) if queries else 0,
+    }
